@@ -4,6 +4,7 @@ import { UpdateEmpleadoDto } from './dto/update-empleado.dto';
 import { CreateEmpleado } from './interface/create-empleado.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
+import { UpdateEmpleado } from './interface/update-empleado.interface';
 
 @Injectable()
 export class EmpleadosService {
@@ -11,7 +12,7 @@ export class EmpleadosService {
   constructor(private readonly prismaService : PrismaService) {}
 
   async create({email, nombre, telefono, clave} : CreateEmpleado) {
-    const claveEncrypt = await bcrypt.hash(clave, 9)
+    const claveEncrypt = await bcrypt.hash(clave, 10)
     const empleado = await this.prismaService.empleados.create({
       data: {
         email,
@@ -25,18 +26,45 @@ export class EmpleadosService {
   }
 
   findAll() {
-    return `This action returns all empleados`;
+    return this.prismaService.empleados.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} empleado`;
+  findByEmail(email: string) {
+    return this.prismaService.empleados.findUnique({
+      where: {
+        email
+      }
+    });
   }
 
-  update(id: number, updateEmpleadoDto: UpdateEmpleadoDto) {
-    return `This action updates a #${id} empleado`;
+  findById(id: number) {
+    return this.prismaService.empleados.findUnique({
+      where: {
+        empleadoId: id
+      }
+    });
+  }
+
+  async update(updateEmpleado: UpdateEmpleado) {
+    const claveEncrypt = await bcrypt.hash(updateEmpleado.clave, 10);
+
+    return await this.prismaService.empleados.update({
+      where: {
+        empleadoId: updateEmpleado.empleadoId
+      },
+      data: {
+        nombre: updateEmpleado.nombre,
+        telefono: updateEmpleado.telefono,
+        clave: claveEncrypt
+      }
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} empleado`;
+    return this.prismaService.empleados.delete({
+      where: {
+        empleadoId: id
+      }
+    });
   }
 }

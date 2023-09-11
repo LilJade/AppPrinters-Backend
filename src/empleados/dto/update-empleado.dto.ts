@@ -2,10 +2,9 @@ import { PartialType } from '@nestjs/mapped-types';
 import { CreateEmpleadoDto } from './create-empleado.dto';
 import { IsEmail, IsNotEmpty, MinLength } from "class-validator"
 
-export class UpdateEmpleadoDto extends PartialType(CreateEmpleadoDto) {
-    @IsNotEmpty({message: "El correo no puede estar vacío!.."})
-    @IsEmail({}, {message: "Este correo no es valido!.."})
-    email: string
+export class UpdateEmpleadoDto {
+    @IsNotEmpty({message: "El nombre no puede estar vacío"})
+    empleadoId: number
 
     @IsNotEmpty({message: "El nombre no puede estar vacío"})
     nombre: string
