@@ -6,9 +6,11 @@ import { JwtAuthGuard } from 'src/AUTH/auth.guard';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SearchEmpleadoByEmailDto } from './dto/searchByEmail-empleado.dto';
 import { SearchEmpleadoByIdDto } from './dto/searchById-empleado.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('empleados')
 @UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 export class EmpleadosController {
   constructor(private readonly empleadosService: EmpleadosService) {}
 
@@ -37,28 +39,8 @@ export class EmpleadosController {
     return this.empleadosService.findById(empleadoId);
   }
 
-  /*@Get('/findByEmail')
-  async findByEmail(@Body() {email}: SearchEmpleadoByEmailDto) {
-    return await this.prismaService.empleados.findUnique({
-      where: {
-        email
-      }
-    })
+  @Post('/findPrinters')
+  async findPrintersOfEmpleado(@Body() {email}: SearchEmpleadoByEmailDto) {
+    return this.empleadosService.findAllPrintersOfEmpleado(email);
   }
-
-  @Get('/findById')
-  async findById(@Body() {empleadoId}: SearchEmpleadoByIdDto) {
-    return ;
-  }*/
-
-  /*
-  @Post('/login')
-    login( @Body() loginEmpleadoDto : LoginEmpleadoDto ) {
-        return this.empleadosService.login(loginEmpleadoDto);
-    }
-  */
-
-/*  remove(id: number) {
-    return ;
-  }*/
 }

@@ -67,4 +67,15 @@ export class EmpleadosService {
       }
     });
   }
+
+  findAllPrintersOfEmpleado(email: string) {
+    return this.prismaService.empleados.findUnique({
+      where: {
+        email
+      },
+      include: {
+        printers: true
+      }
+    })
+  }
 }
